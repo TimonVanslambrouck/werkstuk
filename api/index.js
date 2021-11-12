@@ -1,4 +1,27 @@
 const server = require('./server');
+// const database = require('./helper/databaseHelper');
+
+const database = require('knex')({
+    client: 'pg',
+    connection: {
+        host: '127.0.0.1',
+        port: 5432,
+        user: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DB
+    }
+});
+
+database.schema.hasTable('users').then(function (exists) {
+    if (!exists) {
+        return knex.schema.createTable('users', function (t) {
+            t.increments('id').primary();
+            t.string('first_name', 100);
+            t.string('last_name', 100);
+            t.text('bio');
+        });
+    }
+});
 
 /**
  * [GET]
