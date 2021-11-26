@@ -4,8 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "jest"
+    "start": "nodemon --legacy-watch index.js",
+    "test": "jest --watchAll --detectOpenHandles",
+    "test-ci": "jest --ci --forceExit"
   },
   "author": "",
   "license": "ISC",
