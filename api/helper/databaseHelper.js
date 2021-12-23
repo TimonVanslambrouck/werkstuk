@@ -1,5 +1,5 @@
 function checkUsername(name) {
-    if (name.includes(" ") || name.match(/^[^a-zA-Z0-9]+$/) || name === '' || name === null || name === undefined) {
+    if (name === null || name === undefined || name.includes(" ") || name.match(/^[^a-zA-Z0-9]+$/) || name === '') {
         return false;
     } else {
         return true;
