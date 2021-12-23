@@ -4,7 +4,7 @@ services:
   api:
     build: .
     environment:
-      POSTGRES_CONNECTION_STRING: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
+      POSTGRES_CONNECTION_STRING: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
     ports:
       - "3000:3000"
     depends_on:
