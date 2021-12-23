@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --legacy-watch ./api/index.js",
+    "start": "nodemon --legacy-watch ./api/server.js",
     "test": "jest --watchAll --detectOpenHandles",
     "test-ci": "jest --ci --forceExit"
   },

@@ -1,9 +1,16 @@
-const SERVER = require('./SERVER');
-const POSTGRESSDATABASE = require('./db/knex')
+const express = require("express");
+const SERVER = express();
+const POSTGRESSDATABASE = require('./db/knex');
 const {
     HELPERFUNCTIONS
 } = require('./helper/databaseHelper');
 
+SERVER.use(express.json());
+SERVER.use(express.urlencoded({
+    extended: true
+}));
+
+//SOURCE: https://stackoverflow.com/a/24344756
 
 /* 
  *   USER DATABASE
@@ -116,3 +123,5 @@ SERVER.delete('/team/:id', function (req, res) {
         res.sendStatus(200);
     })
 })
+
+module.exports = SERVER;
