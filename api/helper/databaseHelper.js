@@ -1,14 +1,13 @@
-const database = require('knex')({
-    client: 'pg',
-    connection: {
-        host: 'localhost',
-        port: 5432,
-        user: process.env.POSTGRES_USER,
-        password: process.env.POSTGRES_PASSWORD,
-        database: process.env.POSTGRES_DB
+function checkUsername(name) {
+    if (name === null || name === undefined || name.includes(" ") || name.match(/^[^a-zA-Z0-9]+$/) || name === '') {
+        return false;
+    } else {
+        return true;
     }
-});
+}
 
-exports.module = {
-    data
+// Source: https://stackoverflow.com/a/32311229
+
+module.exports = {
+    checkUsername
 }

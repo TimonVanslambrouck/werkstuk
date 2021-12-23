@@ -1,9 +1,6 @@
-const express = require("express");
-const server = express();
-const PORT = 3000;
+const SERVER = require('./index');
+const PORT = 3000 || process.env.PORT;
 
-server.listen(PORT, () => {
+SERVER.listen(PORT, () => {
     console.log(`Server is listening on ${PORT}`);
 })
-
-module.exports = server;
