@@ -10,7 +10,7 @@ const knex = require('knex')({
         knex.schema.hasTable('teams').then(function (exists) {
             if (!exists) {
                 return knex.schema.createTable('teams', function (t) {
-                    t.increments('team_id').primary();
+                    t.increments('teamId').primary();
                     t.string('team', 100).notNullable();
                     t.timestamps();
                 });
@@ -20,9 +20,9 @@ const knex = require('knex')({
                 if (!exists) {
                     return knex.schema.createTable('users', function (t) {
                         t.increments('id').primary();
+                        t.integer('team').unsigned().notNullable();
                         t.string('username', 100).notNullable();
-                        t.foreign('team_id').unsigned();
-                        t.foreign('team_id').references('team_id').inTable('teams');
+                        t.foreign('team').inTable('teams').references('teamId');
                         t.timestamps();
                     });
                 }
