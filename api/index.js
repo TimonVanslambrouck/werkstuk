@@ -1,24 +1,32 @@
 const server = require('./server');
-const knex = require('./db/knex')
+const postgressDatabase = require('./db/knex')
 // const database = require('./helper/databaseHelper');
+
+
+/* 
+ *   USER DATABASE
+ */
 
 
 /**
  * [GET]
- * returns specific user by id
+ * returns all users in database
  */
-server.get('/user/:id', function (req, res) {
-    const userId = req.params.id;
-    res.send('Got a GET request at /user');
+server.get('/users', function (req, res) {
+    postgressDatabase.select().from('users').then(data => {
+        return res.sendStatus(200).json(data);
+    })
 });
 
 /**
  * [POST]
- * returns specific user by id
+ * inserts a new user in the database
  */
-server.post('/user/', function (req, res) {
+server.post('/user', function (req, res) {
     const user = req.query;
-    res.send('Got a POST request at /user');
+    postgressDatabase('users').insert(user).then(() => {
+        return res.sendStatus(200);
+    })
 });
 
 /**
@@ -28,7 +36,11 @@ server.post('/user/', function (req, res) {
 server.put('/user/:id', function (req, res) {
     const userId = req.params.id;
     const updateQuery = req.query;
-    res.send('Got a PUT/UPDATE request at /user');
+    postgressDatabase('users').where({
+        id: userId
+    }).update(updateQuery).then(() => {
+        return res.sendStatus(200);
+    })
 })
 
 /**
@@ -37,5 +49,63 @@ server.put('/user/:id', function (req, res) {
  */
 server.delete('/user/:id', function (req, res) {
     const userId = req.params.id;
-    res.send('Got a DELETE request at /user');
+    postgressDatabase('users').where({
+        id: userId
+    }).del().then(() => {
+        res.sendStatus(200);
+    })
+})
+
+
+/* 
+ *   TEAM DATABASE
+ */
+
+
+/**
+ * [GET]
+ * returns all teams in database
+ */
+server.get('/teams', function (req, res) {
+    postgressDatabase.select().from('teams').then(data => {
+        return res.sendStatus(200).json(data);
+    })
+});
+
+/**
+ * [POST]
+ * inserts a new team in the database
+ */
+server.post('/team', function (req, res) {
+    const team = req.query;
+    postgressDatabase('teams').insert(team).then(() => {
+        return res.sendStatus(200);
+    })
+});
+
+/**
+ * [PUT]
+ * updates specific data from specific team by id
+ */
+server.put('/team/:id', function (req, res) {
+    const teamId = req.params.id;
+    const updateQuery = req.query;
+    postgressDatabase('teams').where({
+        id: teamId
+    }).update(updateQuery).then(() => {
+        return res.sendStatus(200);
+    })
+})
+
+/**
+ * [DELETE]
+ * deletes specific team by id
+ */
+server.delete('/team/:id', function (req, res) {
+    const teamId = req.params.id;
+    postgressDatabase('teams').where({
+        team_id: teamId
+    }).del().then(() => {
+        res.sendStatus(200);
+    })
 })
