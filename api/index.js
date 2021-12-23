@@ -16,6 +16,10 @@ SERVER.use(express.urlencoded({
  *   USER DATABASE
  */
 
+SERVER.get('/', function (req, res) {
+    return res.sendStatus(200);
+})
+
 
 /**
  * [GET]
@@ -23,7 +27,7 @@ SERVER.use(express.urlencoded({
  */
 SERVER.get('/users', function (req, res) {
     POSTGRESSDATABASE.select().from('users').then(data => {
-        return res.json(data);
+        return res.status(200).json(data);
     })
 });
 
