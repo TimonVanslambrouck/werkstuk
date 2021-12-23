@@ -2,7 +2,7 @@ version: "3.9"
 services:
 
   api:
-    build: .
+    build: ./api
     environment:
       POSTGRES_CONNECTION_STRING: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
     ports:
