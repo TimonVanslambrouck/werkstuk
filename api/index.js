@@ -2,7 +2,7 @@ const express = require("express");
 const SERVER = express();
 const POSTGRESSDATABASE = require('./db/knex');
 const {
-    HELPERFUNCTIONS
+    checkUsername
 } = require('./helper/databaseHelper');
 
 SERVER.use(express.json());
@@ -23,7 +23,7 @@ SERVER.use(express.urlencoded({
  */
 SERVER.get('/users', function (req, res) {
     POSTGRESSDATABASE.select().from('users').then(data => {
-        return res.sendStatus(200).json(data);
+        return res.json(data);
     })
 });
 
@@ -33,7 +33,7 @@ SERVER.get('/users', function (req, res) {
  */
 SERVER.post('/user', function (req, res) {
     const user = req.query;
-    if (HELPERFUNCTIONS.checkUsername(user.username)) {
+    if (checkUsername(user.username)) {
         POSTGRESSDATABASE('users').insert(user).then(() => {
             return res.sendStatus(200);
         })
@@ -82,7 +82,7 @@ SERVER.delete('/user/:id', function (req, res) {
  */
 SERVER.get('/teams', function (req, res) {
     POSTGRESSDATABASE.select().from('teams').then(data => {
-        return res.sendStatus(200).json(data);
+        return res.json(data);
     })
 });
 
@@ -105,7 +105,7 @@ SERVER.put('/team/:id', function (req, res) {
     const teamId = req.params.id;
     const updateQuery = req.query;
     POSTGRESSDATABASE('teams').where({
-        id: teamId
+        teamId: teamId
     }).update(updateQuery).then(() => {
         return res.sendStatus(200);
     })
@@ -118,7 +118,7 @@ SERVER.put('/team/:id', function (req, res) {
 SERVER.delete('/team/:id', function (req, res) {
     const teamId = req.params.id;
     POSTGRESSDATABASE('teams').where({
-        team_id: teamId
+        teamId: teamId
     }).del().then(() => {
         res.sendStatus(200);
     })
