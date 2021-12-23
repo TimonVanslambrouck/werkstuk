@@ -1,25 +1,7 @@
 const server = require('./server');
+const knex = require('./db/knex')
 // const database = require('./helper/databaseHelper');
 
-console.log(process.env.POSTGRES_PORT);
-
-const pg = require('knex')({
-    client: 'pg',
-    version: '9.6',
-    searchPath: ['knex', 'public'],
-    connection: process.env.POSTGRES_CONNECTION_STRING ? process.env.POSTGRES_CONNECTION_STRING : 'postgres://example:example@localhost:5432/test'
-});
-
-// pg.schema.hasTable('users').then(function (exists) {
-//     if (!exists) {
-//         return knex.schema.createTable('users', function (t) {
-//             t.increments('id').primary();
-//             t.string('first_name', 100);
-//             t.string('last_name', 100);
-//             t.text('bio');
-//         });
-//     }
-// });
 
 /**
  * [GET]
