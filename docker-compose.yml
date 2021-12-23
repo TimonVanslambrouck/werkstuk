@@ -2,11 +2,14 @@ version: "3.9"
 services:
 
   api:
-    build: ./api
+    build: .
     environment:
-      POSTGRES_CONNECTION_STRING: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
+      POSTGRES_CONNECTION_STRING: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}"
     ports:
       - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
       
   db:
     image: "postgres:latest"
@@ -15,3 +18,8 @@ services:
       POSTGRES_USER: 
       POSTGRES_PASSWORD:
       POSTGRES_DB:    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

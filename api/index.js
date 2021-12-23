@@ -1,59 +1,118 @@
-const server = require('./server');
-// const database = require('./helper/databaseHelper');
+const SERVER = require('./SERVER');
+const POSTGRESSDATABASE = require('./db/knex')
+const {
+    HELPERFUNCTIONS
+} = require('./helper/databaseHelper');
 
-console.log(process.env.POSTGRES_PORT);
 
-const pg = require('knex')({
-    client: 'pg',
-    version: '9.6',
-    searchPath: ['knex', 'public'],
-    connection: process.env.POSTGRES_CONNECTION_STRING ? process.env.POSTGRES_CONNECTION_STRING : 'postgres://example:example@localhost:5432/test'
-});
+/* 
+ *   USER DATABASE
+ */
 
-// pg.schema.hasTable('users').then(function (exists) {
-//     if (!exists) {
-//         return knex.schema.createTable('users', function (t) {
-//             t.increments('id').primary();
-//             t.string('first_name', 100);
-//             t.string('last_name', 100);
-//             t.text('bio');
-//         });
-//     }
-// });
 
 /**
  * [GET]
- * returns specific user by id
+ * returns all users in database
  */
-server.get('/user/:id', function (req, res) {
-    const userId = req.params.id;
-    res.send('Got a GET request at /user');
+SERVER.get('/users', function (req, res) {
+    POSTGRESSDATABASE.select().from('users').then(data => {
+        return res.sendStatus(200).json(data);
+    })
 });
 
 /**
  * [POST]
- * returns specific user by id
+ * inserts a new user in the database
  */
-server.post('/user/', function (req, res) {
+SERVER.post('/user', function (req, res) {
     const user = req.query;
-    res.send('Got a POST request at /user');
+    if (HELPERFUNCTIONS.checkUsername(user.username)) {
+        POSTGRESSDATABASE('users').insert(user).then(() => {
+            return res.sendStatus(200);
+        })
+    } else {
+        return res.sendStatus(400);
+    }
+
 });
 
 /**
  * [PUT]
  * updates specific data from specific user by id
  */
-server.put('/user/:id', function (req, res) {
+SERVER.put('/user/:id', function (req, res) {
     const userId = req.params.id;
     const updateQuery = req.query;
-    res.send('Got a PUT/UPDATE request at /user');
+    POSTGRESSDATABASE('users').where({
+        id: userId
+    }).update(updateQuery).then(() => {
+        return res.sendStatus(200);
+    })
 })
 
 /**
  * [DELETE]
  * deletes specific user by id
  */
-server.delete('/user/:id', function (req, res) {
+SERVER.delete('/user/:id', function (req, res) {
     const userId = req.params.id;
-    res.send('Got a DELETE request at /user');
+    POSTGRESSDATABASE('users').where({
+        id: userId
+    }).del().then(() => {
+        res.sendStatus(200);
+    })
+})
+
+
+/* 
+ *   TEAM DATABASE
+ */
+
+
+/**
+ * [GET]
+ * returns all teams in database
+ */
+SERVER.get('/teams', function (req, res) {
+    POSTGRESSDATABASE.select().from('teams').then(data => {
+        return res.sendStatus(200).json(data);
+    })
+});
+
+/**
+ * [POST]
+ * inserts a new team in the database
+ */
+SERVER.post('/team', function (req, res) {
+    const team = req.query;
+    POSTGRESSDATABASE('teams').insert(team).then(() => {
+        return res.sendStatus(200);
+    })
+});
+
+/**
+ * [PUT]
+ * updates specific data from specific team by id
+ */
+SERVER.put('/team/:id', function (req, res) {
+    const teamId = req.params.id;
+    const updateQuery = req.query;
+    POSTGRESSDATABASE('teams').where({
+        id: teamId
+    }).update(updateQuery).then(() => {
+        return res.sendStatus(200);
+    })
+})
+
+/**
+ * [DELETE]
+ * deletes specific team by id
+ */
+SERVER.delete('/team/:id', function (req, res) {
+    const teamId = req.params.id;
+    POSTGRESSDATABASE('teams').where({
+        team_id: teamId
+    }).del().then(() => {
+        res.sendStatus(200);
+    })
 })
