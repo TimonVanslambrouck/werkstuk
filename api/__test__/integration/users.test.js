@@ -32,7 +32,7 @@ let exampleUsers = [{
 ]
 
 describe('testing postgres', () => {
-    test('adding user', async (done) => {
+    test('end to end', async (done) => {
         try {
             let uuid = null;
             await REQUEST.post('/user')
@@ -46,14 +46,19 @@ describe('testing postgres', () => {
                 })
             await DATABASE.raw('BEGIN');
             DATABASE.select('*').table("users").where({
-                    uuid
-                }).then((rows) => {
-                    console.log(rows)
-                    expect(rows).toBeInstanceOf(Array);
-                    expect(rows.length).toBe(1);
-                })
-                .then(() => {
-                    done();
+                uuid
+            }).then((rows) => {
+                console.log(rows)
+                expect(rows).toBeInstanceOf(Array);
+                expect(rows.length).toBe(1);
+            })
+            await REQUEST.get(`/user/${uuid.id}`)
+                .expect(200)
+                .then((resp) => resp.body.res)
+                .then((res) => {
+                    uuid = res[0].uuid
+                }).catch((e) => {
+                    console.log(e)
                 })
         } catch (err) {
             throw err;
