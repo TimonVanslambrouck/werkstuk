@@ -1,6 +1,8 @@
-const server = require('./server');
-const postgressDatabase = require('./db/knex')
-// const database = require('./helper/databaseHelper');
+const SERVER = require('./SERVER');
+const POSTGRESSDATABASE = require('./db/knex')
+const {
+    HELPERFUNCTIONS
+} = require('./helper/databaseHelper');
 
 
 /* 
@@ -12,8 +14,8 @@ const postgressDatabase = require('./db/knex')
  * [GET]
  * returns all users in database
  */
-server.get('/users', function (req, res) {
-    postgressDatabase.select().from('users').then(data => {
+SERVER.get('/users', function (req, res) {
+    POSTGRESSDATABASE.select().from('users').then(data => {
         return res.sendStatus(200).json(data);
     })
 });
@@ -22,21 +24,26 @@ server.get('/users', function (req, res) {
  * [POST]
  * inserts a new user in the database
  */
-server.post('/user', function (req, res) {
+SERVER.post('/user', function (req, res) {
     const user = req.query;
-    postgressDatabase('users').insert(user).then(() => {
-        return res.sendStatus(200);
-    })
+    if (HELPERFUNCTIONS.checkUsername(user.username)) {
+        POSTGRESSDATABASE('users').insert(user).then(() => {
+            return res.sendStatus(200);
+        })
+    } else {
+        return res.sendStatus(400);
+    }
+
 });
 
 /**
  * [PUT]
  * updates specific data from specific user by id
  */
-server.put('/user/:id', function (req, res) {
+SERVER.put('/user/:id', function (req, res) {
     const userId = req.params.id;
     const updateQuery = req.query;
-    postgressDatabase('users').where({
+    POSTGRESSDATABASE('users').where({
         id: userId
     }).update(updateQuery).then(() => {
         return res.sendStatus(200);
@@ -47,9 +54,9 @@ server.put('/user/:id', function (req, res) {
  * [DELETE]
  * deletes specific user by id
  */
-server.delete('/user/:id', function (req, res) {
+SERVER.delete('/user/:id', function (req, res) {
     const userId = req.params.id;
-    postgressDatabase('users').where({
+    POSTGRESSDATABASE('users').where({
         id: userId
     }).del().then(() => {
         res.sendStatus(200);
@@ -66,8 +73,8 @@ server.delete('/user/:id', function (req, res) {
  * [GET]
  * returns all teams in database
  */
-server.get('/teams', function (req, res) {
-    postgressDatabase.select().from('teams').then(data => {
+SERVER.get('/teams', function (req, res) {
+    POSTGRESSDATABASE.select().from('teams').then(data => {
         return res.sendStatus(200).json(data);
     })
 });
@@ -76,9 +83,9 @@ server.get('/teams', function (req, res) {
  * [POST]
  * inserts a new team in the database
  */
-server.post('/team', function (req, res) {
+SERVER.post('/team', function (req, res) {
     const team = req.query;
-    postgressDatabase('teams').insert(team).then(() => {
+    POSTGRESSDATABASE('teams').insert(team).then(() => {
         return res.sendStatus(200);
     })
 });
@@ -87,10 +94,10 @@ server.post('/team', function (req, res) {
  * [PUT]
  * updates specific data from specific team by id
  */
-server.put('/team/:id', function (req, res) {
+SERVER.put('/team/:id', function (req, res) {
     const teamId = req.params.id;
     const updateQuery = req.query;
-    postgressDatabase('teams').where({
+    POSTGRESSDATABASE('teams').where({
         id: teamId
     }).update(updateQuery).then(() => {
         return res.sendStatus(200);
@@ -101,9 +108,9 @@ server.put('/team/:id', function (req, res) {
  * [DELETE]
  * deletes specific team by id
  */
-server.delete('/team/:id', function (req, res) {
+SERVER.delete('/team/:id', function (req, res) {
     const teamId = req.params.id;
-    postgressDatabase('teams').where({
+    POSTGRESSDATABASE('teams').where({
         team_id: teamId
     }).del().then(() => {
         res.sendStatus(200);
