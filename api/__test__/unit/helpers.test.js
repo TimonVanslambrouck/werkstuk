@@ -1,3 +1,11 @@
-test('adds 2 +2 equal 4', () => {
-    expect((2 + 2)).toBe(4);
+const HELPERFUNCTIONS = require('../../helper/databaseHelper');
+
+test('user cannot type any symbols as username', () => {
+    expect(HELPERFUNCTIONS.checkUsername('correctname')).toBeTruthy();
+    expect(HELPERFUNCTIONS.checkUsername('//')).toBeFalsy();
+})
+
+test('user cannot type any spaces in their username', () => {
+    expect(HELPERFUNCTIONS.checkUsername('correctname')).toBeTruthy();
+    expect(HELPERFUNCTIONS.checkUsername('not correct name')).toBeFalsy();
 })
